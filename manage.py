@@ -5,7 +5,7 @@ import sys
 
 
 def main():
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'weekendkim_backend.settings.debug')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'weekendkim_backend.settings.deploy')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
