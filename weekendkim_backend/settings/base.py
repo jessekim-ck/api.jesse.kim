@@ -1,6 +1,5 @@
 import os
 import datetime
-import psycopg2
 import json
 
 
@@ -64,24 +63,6 @@ TEMPLATES = [
     },
 ]
 
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
-# Needs psycopg2 library.
-# For it to be, environmental variable PATH should contain the PostgreSQL's root dir.
-DATABASES = {
-    'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3', -- default setting
-        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'), -- default setting
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'weekendkim',
-        'USER': 'jessekim',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -120,6 +101,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+    STATIC_DIR,
+]
+STATIC_ROOT = os.path.join(ROOT_DIR, '.static_root')
+
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
