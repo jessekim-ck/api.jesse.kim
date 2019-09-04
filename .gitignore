@@ -2,7 +2,6 @@ manage.py
 .config_secret/
 db.sqlite3
 .idea/
-debug.py
 
 .DS_Store
 .AppleDouble
