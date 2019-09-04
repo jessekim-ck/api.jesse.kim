@@ -1,5 +1,7 @@
 .config_secret/
 /db.sqlite3
+.static_root/
+/weekendkim_backend/static/
 .idea/
 .DS_Store
 .AppleDouble
