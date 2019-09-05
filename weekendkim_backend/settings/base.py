@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'api',
     'django_crontab',
-    # 'django_redis'
+    'django_redis'
 ]
 
 MIDDLEWARE = [
@@ -142,5 +142,5 @@ CRONJOBS = [
     # ('* * * * *', 'api.crons.test_cron_job')
 ]
 
-# SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-# SESSION_CACHE_ALIAS = "default"
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
