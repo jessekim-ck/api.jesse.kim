@@ -125,7 +125,6 @@ REST_FRAMEWORK = {
 CORS_ORIGIN_WHITELIST = [
     # Host List for ignoring CORS warning
     'http://localhost:3000',
-    'http://13.209.254.161:80'
 ]
 
 JWT_AUTH = {
