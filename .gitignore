@@ -1,4 +1,5 @@
 .config_secret/
+/api/migrations/
 /db.sqlite3
 .static_root/
 /weekendkim_backend/static/
