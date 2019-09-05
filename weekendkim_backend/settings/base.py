@@ -137,5 +137,5 @@ JWT_AUTH = {
 
 CRONJOBS = [
     # Test Cron Job: runs every minute.
-    ('* * * * *', 'api.crons.test_cron_job')
+    # ('* * * * *', 'api.crons.test_cron_job')
 ]
