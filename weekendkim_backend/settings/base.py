@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'api',
     'django_crontab',
+    'django_redis'
 ]
 
 MIDDLEWARE = [
@@ -124,6 +125,7 @@ REST_FRAMEWORK = {
 CORS_ORIGIN_WHITELIST = [
     # Host List for ignoring CORS warning
     'http://localhost:3000',
+    'http://13.209.254.161'
 ]
 
 JWT_AUTH = {
@@ -139,3 +141,6 @@ CRONJOBS = [
     # Test Cron Job: runs every minute.
     # ('* * * * *', 'api.crons.test_cron_job')
 ]
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
