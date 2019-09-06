@@ -14,7 +14,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': config_secret_deploy['django']['databases']['user'],
         'PASSWORD': config_secret_deploy['django']['databases']['password'],
-        'HOST': 'weekendkimblog.cmi32gylznob.ap-northeast-2.rds.amazonaws.com',
+        'HOST': config_secret_deploy['django']['databases']['host'],
         'PORT': '5432',
     }
 }

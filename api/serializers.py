@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from .models import Post, Category
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
+from django.utils.timezone import datetime
 
 
 # Serializer for Getting Current User Information
@@ -52,6 +53,12 @@ class PostSerializer(serializers.ModelSerializer):
             return None
         category = obj.category_id.title
         return category
+    
+    def update(self, validated_data):
+        post = self.Meta.model(**validated_data)
+        post.updated = datetime.now()
+        post.save()
+        return post
 
     class Meta:
         model = Post
