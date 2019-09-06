@@ -54,15 +54,16 @@ class PostSerializer(serializers.ModelSerializer):
         category = obj.category_id.title
         return category
 
-    
     def update(self, post, validated_data):
         post.updated = datetime.now()
+        post.title = validated_data.get('title', post.title)
+        post.text = validated_data.get('text', post.text)
+        post.category_id = validated_data.get('category_id', post.category_id)
         post.save()
         return post
 
     class Meta:
         model = Post
-        # NOT NULL fields must be contained!
         fields = ['id', 'created', 'updated', 'writer_id', 'writer', 'category_id', 'category', 'title', 'text']
 
 
