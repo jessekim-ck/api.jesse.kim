@@ -53,9 +53,9 @@ class PostSerializer(serializers.ModelSerializer):
             return None
         category = obj.category_id.title
         return category
+
     
-    def update(self, validated_data):
-        post = self.Meta.model(**validated_data)
+    def update(self, post, validated_data):
         post.updated = datetime.now()
         post.save()
         return post
