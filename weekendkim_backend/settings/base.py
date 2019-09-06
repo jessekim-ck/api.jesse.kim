@@ -125,6 +125,7 @@ REST_FRAMEWORK = {
 CORS_ORIGIN_WHITELIST = [
     # Host List for ignoring CORS warning
     'http://localhost:3000',
+    'https://blog.weekend.kim'
 ]
 
 JWT_AUTH = {
