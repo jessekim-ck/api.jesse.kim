@@ -3,8 +3,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import UserSerializer, UserSerializerWithToken, PostSerializer, CategorySerializer
-from .models import Post, Category
+from .serializers import *
+from .models import *
 
 
 @api_view(['GET'])
@@ -54,8 +54,15 @@ class PostDetail(APIView):
 
     def get(self, request, pk, format=None):
         post = Post.objects.get(pk=pk)
-        serializer = PostSerializer(post)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        post_serializer = PostSerializer(post)
+
+        comment_list = Comment.objects.filter(post_id=pk).order_by('created')
+        comment_serializer = CommentSerializer(comment_list, many=True)
+
+        return Response({
+            "post": post_serializer.data,
+            "comment_list": comment_serializer.data
+        }, status=status.HTTP_200_OK)
 
     def delete(self, request, pk, format=None):
         post = Post.objects.get(pk=pk)
@@ -65,37 +72,72 @@ class PostDetail(APIView):
 
 
 # Get Parent Category List
-class GetCategoryDetail(APIView):
-
-    def get(self, request, pk, format=None):
-        category = Category.objects.get(pk=pk)
-        serializer = CategorySerializer(category)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-# Get Parent Category List
 class CategoryList(APIView):
 
     def get(self, request, format=None):
-        categories = Category.objects.filter(parent_category_id=None)
-        serializer = CategorySerializer(categories, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        category_list = Category.objects.filter(parent_category_id=None)
+        category_serializer = CategorySerializer(category_list, many=True)
+
+        post_list = Post.objects.filter(category_id=None)
+        post_serializer = PostSerializer(post_list, many=True)
+
+        return Response(
+            {
+                "category": {"id": None, "title": None, "parent_category_id": None},
+                "children_category_list": category_serializer.data,
+                "children_post_list": post_serializer.data,
+            },
+            status=status.HTTP_200_OK
+        )
 
 
-# Get Children Category List
-class SubcategoryList(APIView):
+# Get Category Information
+class CategoryDetail(APIView):
 
     def get(self, request, pk, format=None):
-        subcategories = Category.objects.filter(parent_category_id=pk)
-        serializer = CategorySerializer(subcategories, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        category = Category.objects.get(pk=pk)
+        category_serializer = CategorySerializer(category)
+
+        children_categories = Category.objects.filter(parent_category_id=pk).order_by('id')
+        children_category_serializer = CategorySerializer(children_categories, many=True)
+
+        children_posts = Post.objects.filter(category_id=pk).order_by('-created')
+        children_post_serializer = PostSerializer(children_posts, many=True)
+
+        return Response(
+            {
+                "category": category_serializer.data,
+                "children_category_list": children_category_serializer.data,
+                "children_post_list": children_post_serializer.data,
+            },
+            status=status.HTTP_200_OK
+        )
+
+    def post(self, request, pk, format=None):
+        category = CategorySerializer(data=request.data)
+        if category.is_valid():
+            category.save()
+            return Response(category.data, status=status.HTTP_201_CREATED)
+        return Response(category.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# Get Children Post List
-class CategorizedPostList(APIView):
+class CommentList(APIView):
+
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request, pk, format=None):
-        posts = Post.objects.filter(category_id=pk)
-        serializer = PostSerializer(posts, many=True)
+        comment_list = Comment.objects.filter(post_id=pk).order_by('created')
+        serializer = CommentSerializer(comment_list, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, pk, format=None):
+        comment = CommentSerializer(data=request.data)
+        if comment.is_valid():
+            comment.save()
+            return Response(comment.data, status=status.HTTP_201_CREATED)
+        return Response(comment.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 

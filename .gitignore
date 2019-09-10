@@ -1,7 +1,9 @@
 .config_secret/
 /api/migrations/
 /db.sqlite3
+/weekendkim_backend/db.sqlite3
 .static_root/
+*.sqlite3
 /weekendkim_backend/static/
 .idea/
 .DS_Store

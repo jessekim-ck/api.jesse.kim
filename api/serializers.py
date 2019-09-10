@@ -1,5 +1,5 @@
+from .models import Post, Category, Comment
 from django.contrib.auth.models import User
-from .models import Post, Category
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
 from django.utils.timezone import datetime
@@ -72,4 +72,13 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'title', 'description', 'parent_category_id']
+
+
+class CommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'created', 'updated', 'post_id', 'nickname', 'text']
+
+
 

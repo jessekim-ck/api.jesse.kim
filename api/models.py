@@ -39,3 +39,20 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Comment(models.Model):
+    created = models.DateTimeField(default=timezone.now)
+    updated = models.DateTimeField(default=timezone.now)
+    nickname = models.CharField(max_length=200, null=True, blank=True)
+    text = models.TextField()
+    post_id = models.ForeignKey(
+        Post,
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE
+    )
+
+    def __str__(self):
+        return self.post_id.title
+
