@@ -23,10 +23,3 @@ class CommentAdmin(admin.ModelAdmin):
 
 admin.site.register(Comment, CommentAdmin)
 
-
-class UserAdmin(admin.ModelAdmin):
-    list_display = ['id', 'username', 'date_joined', 'last_login']
-
-
-admin.site.register(User, UserAdmin)
-
