@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import *
+from .models import Post, Category, Comment
+from django.contrib.auth.models import User
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -21,4 +22,11 @@ class CommentAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Comment, CommentAdmin)
+
+
+class UserAdmin(admin.ModelAdmin):
+    list_display = ['id', 'username', 'date_joined', 'last_login']
+
+
+admin.site.register(User, UserAdmin)
 
