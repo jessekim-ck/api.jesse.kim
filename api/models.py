@@ -14,6 +14,31 @@ class Category(models.Model):
         on_delete=models.CASCADE
     )
 
+    @property
+    def num_posts(self):
+        posts = Post.objects.filter(category_id=self)
+        return len(posts)
+
+    @property
+    def children_categories(self):
+        children = Category.objects.filter(parent_category_id=self)
+        return children
+
+    @property
+    def num_total_posts(self):
+        num = self.num_posts
+
+        for child in self.children_categories:
+            num = num + child.num_posts
+            for grand_child in child.children_categories:
+                num = num + grand_child.num_posts
+                for grand_grand_child in grand_child.children_categories:
+                    num = num + grand_grand_child.num_posts
+                    for grand_grand_grand_child in grand_grand_child.children_categories:
+                        num = num + grand_grand_grand_child.num_posts
+
+        return num
+
     def __str__(self):
         return self.title
 
@@ -36,6 +61,11 @@ class Post(models.Model):
         blank=False,
         on_delete=models.CASCADE
     )
+
+    @property
+    def num_comments(self):
+        comments = Comment.objects.filter(post_id=self)
+        return len(comments)
 
     def __str__(self):
         return self.title

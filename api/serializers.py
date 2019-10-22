@@ -17,8 +17,6 @@ class UserSerializer(serializers.ModelSerializer):
 class UserSerializerWithToken(serializers.ModelSerializer):
 
     token = serializers.SerializerMethodField()
-    # password = serializers.CharField(write_only=True)
-    # Optional. I choose to specify in the Meta data.
 
     def get_token(self, obj):
         jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -64,14 +62,32 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id', 'created', 'updated', 'writer_id', 'writer', 'category_id', 'category', 'title', 'text']
+        fields = [
+            'id',
+            'created',
+            'updated',
+            'writer_id',
+            'writer',
+            'category_id',
+            'category',
+            'title',
+            'text',
+            'num_comments'
+        ]
 
 
 class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'title', 'description', 'parent_category_id']
+        fields = [
+            'id',
+            'title',
+            'description',
+            'parent_category_id',
+            'num_posts',
+            'num_total_posts',
+        ]
 
 
 class CommentSerializer(serializers.ModelSerializer):
