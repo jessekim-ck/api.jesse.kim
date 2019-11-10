@@ -45,30 +45,39 @@ class PostList(APIView):
 class PostDetail(APIView):
 
     def put(self, request, pk, format=None):
-        post = Post.objects.get(pk=pk)
-        serializer = PostSerializer(post, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            post = Post.objects.get(pk=pk)
+            serializer = PostSerializer(post, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Post.DoesNotExist:
+            return Response({"message": "Invalid post id"}, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, pk, format=None):
-        post = Post.objects.get(pk=pk)
-        post_serializer = PostSerializer(post)
+        try:
+            post = Post.objects.get(pk=pk)
+            post_serializer = PostSerializer(post)
 
-        comment_list = Comment.objects.filter(post_id=pk).order_by('created')
-        comment_serializer = CommentSerializer(comment_list, many=True)
+            comment_list = Comment.objects.filter(post_id=pk).order_by('created')
+            comment_serializer = CommentSerializer(comment_list, many=True)
 
-        return Response({
-            "post": post_serializer.data,
-            "comment_list": comment_serializer.data
-        }, status=status.HTTP_200_OK)
+            return Response({
+                "post": post_serializer.data,
+                "comment_list": comment_serializer.data
+            }, status=status.HTTP_200_OK)
+        except Post.DoesNotExist:
+            return Response({"message": "Invalid post id"}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
-        post = Post.objects.get(pk=pk)
-        serializer = PostSerializer(post)
-        serializer.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        try:
+            post = Post.objects.get(pk=pk)
+            serializer = PostSerializer(post)
+            serializer.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Post.DoesNotExist:
+            return Response({"message": "Invalid post id"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 # Get Parent Category List
