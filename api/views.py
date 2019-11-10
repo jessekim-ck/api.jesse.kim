@@ -53,7 +53,7 @@ class PostDetail(APIView):
                 return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Post.DoesNotExist:
-            return Response({"message": "Invalid post id"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Invalid post id"}, status=status.HTTP_404_BAD_REQUEST)
 
     def get(self, request, pk, format=None):
         try:
@@ -68,7 +68,7 @@ class PostDetail(APIView):
                 "comment_list": comment_serializer.data
             }, status=status.HTTP_200_OK)
         except Post.DoesNotExist:
-            return Response({"message": "Invalid post id"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Invalid post id"}, status=status.HTTP_404_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
         try:
@@ -77,7 +77,7 @@ class PostDetail(APIView):
             serializer.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Post.DoesNotExist:
-            return Response({"message": "Invalid post id"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Invalid post id"}, status=status.HTTP_404_BAD_REQUEST)
 
 
 # Get Parent Category List
