@@ -1,11 +1,12 @@
 .config_secret/
-/api/migrations/
-/db.sqlite3
-/weekendkim_backend/db.sqlite3
+api/migrations/
+db.sqlite3
 .static_root/
 *.sqlite3
-/weekendkim_backend/static/
-.idea/
+weekendkim_backend/static/
+.idea
+.vscode
+
 .DS_Store
 .AppleDouble
 .LSOverride
