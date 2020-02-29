@@ -61,7 +61,7 @@ class Post(models.Model):
         blank=False,
         on_delete=models.CASCADE
     )
-    private = models.BooleanField(default=False)
+    is_private = models.BooleanField(default=False)
 
     @property
     def num_comments(self):

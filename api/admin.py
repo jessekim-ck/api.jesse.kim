@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'created', 'updated', 'private']
+    list_display = ['id', 'title', 'created', 'updated', 'is_private']
 
 
 admin.site.register(Post, PostAdmin)

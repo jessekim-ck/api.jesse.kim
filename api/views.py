@@ -37,7 +37,7 @@ class PostList(APIView):
 
     def get(self, request, format=None):
         if request.user.is_anonymous:
-            posts = Post.objects.filter(private=False).order_by('-created')
+            posts = Post.objects.filter(is_private=False).order_by('-created')
         else:
             posts = Post.objects.all().order_by('-created')
         serializer = PostSerializer(posts, many=True)
@@ -61,7 +61,7 @@ class PostDetail(APIView):
     def get(self, request, pk, format=None):
         try:
             post = Post.objects.get(pk=pk)
-            if post.private and request.user.is_anonymous:
+            if post.is_private and request.user.is_anonymous:
                 return Response({"message": "Private post"}, status=status.HTTP_401_UNAUTHORIZED)
             post_serializer = PostSerializer(post)
 

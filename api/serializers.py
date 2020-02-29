@@ -74,7 +74,7 @@ class PostSerializer(serializers.ModelSerializer):
             'title',
             'text',
             'num_comments',
-            'private'
+            'is_private'
         ]
 
 
