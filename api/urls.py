@@ -11,6 +11,6 @@ urlpatterns = [
     path('category/list/', CategoryList.as_view()),
     path('category/<int:pk>/', CategoryDetail.as_view()),
     path('comment/<int:pk>/', CommentList.as_view()),
+    path('daylog/', DayLogList.as_view()),
+    path('daylog/<int:pk>/', DayLogDetail.as_view()),
 ]
-
-

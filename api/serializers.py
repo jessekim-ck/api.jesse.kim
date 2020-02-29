@@ -1,4 +1,4 @@
-from .models import Post, Category, Comment
+from .models import Post, Category, Comment, DayLog
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
@@ -52,6 +52,7 @@ class PostSerializer(serializers.ModelSerializer):
         category = obj.category_id.title
         return category
 
+    # To use serializer.save() method, we need update() or create() method
     def update(self, post, validated_data):
         post.updated = datetime.now()
         post.title = validated_data.get('title', post.title)
@@ -72,7 +73,8 @@ class PostSerializer(serializers.ModelSerializer):
             'category',
             'title',
             'text',
-            'num_comments'
+            'num_comments',
+            'private'
         ]
 
 
@@ -97,4 +99,18 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ['id', 'created', 'updated', 'post_id', 'nickname', 'text']
 
 
+class DayLogSerializer(serializers.ModelSerializer):
 
+    def update(self, daylog, validated_data):
+        daylog.date = validated_data.get('date', daylog.date)
+        daylog.sleep_from = validated_data.get('sleep_from', daylog.sleep_from)
+        daylog.sleep_to = validated_data.get('sleep_to', daylog.sleep_to)
+        daylog.condition = validated_data.get('condition', daylog.condition)
+        daylog.achievement = validated_data.get('achievement', daylog.achievement)
+        daylog.memo = validated_data.get('memo', daylog.memo)
+        daylog.save()
+        return daylog
+
+    class Meta:
+        model = DayLog
+        fields = "__all__"

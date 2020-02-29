@@ -61,6 +61,7 @@ class Post(models.Model):
         blank=False,
         on_delete=models.CASCADE
     )
+    private = models.BooleanField(default=False)
 
     @property
     def num_comments(self):
@@ -86,3 +87,27 @@ class Comment(models.Model):
     def __str__(self):
         return self.post_id.title
 
+
+class DayLog(models.Model):
+
+    class Evaluation(models.IntegerChoices):
+        terrible = 1
+        bad = 2
+        soso = 3
+        good = 4
+        excellent = 5
+
+    date = models.DateField(default=timezone.datetime.today)
+    sleep_from = models.DateTimeField(default=None)
+    sleep_to = models.DateTimeField(default=None)
+    condition = models.IntegerField(choices=Evaluation.choices, default=None)
+    achievement = models.IntegerField(choices=Evaluation.choices, default=None)
+    memo = models.TextField(default="")
+
+    @property
+    def sleep_minutes(self):
+        if self.sleep_from is not None and self.sleep_to is not None:
+            minutes = int((sleep_to - sleep_from).total_seconds/60)
+            return minutes
+        else:
+            return None

@@ -36,7 +36,10 @@ class PostList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, format=None):
-        posts = Post.objects.all().order_by('-created')
+        if request.user.is_anonymous:
+            posts = Post.objects.filter(private=False).order_by('-created')
+        else:
+            posts = Post.objects.all().order_by('-created')
         serializer = PostSerializer(posts, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -50,7 +53,7 @@ class PostDetail(APIView):
             serializer = PostSerializer(post, data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data)
+                return Response(serializer.data, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Post.DoesNotExist:
             return Response({"message": "Invalid post id"}, status=status.HTTP_404_NOT_FOUND)
@@ -58,6 +61,8 @@ class PostDetail(APIView):
     def get(self, request, pk, format=None):
         try:
             post = Post.objects.get(pk=pk)
+            if post.private and request.user.is_anonymous:
+                return Response({"message": "Private post"}, status=status.HTTP_401_UNAUTHORIZED)
             post_serializer = PostSerializer(post)
 
             comment_list = Comment.objects.filter(post_id=pk).order_by('created')
@@ -147,6 +152,33 @@ class CommentList(APIView):
         return Response(comment.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class DayLogList(APIView):
+
+    def get(self, request, format=None):
+        daylogs = DayLog.objects.all().order_by('-date')
+        serializer = DayLogSerializer(daylogs, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, format=None):
+        daylog = DayLogSerializer(data=request.data)
+        if daylog.is_valid():
+            daylog.save()
+            return Response(daylog.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(daylog.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class DayLogDetail(APIView):
 
+    def put(self, request, pk, format=None):
+        try:
+            daylog = DayLog.objects.get(pk=pk)
+            serializer = DayLogSerializer(daylog, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except DayLog.DoesNotExist:
+            return Response({"message": "Invalid DayLog id"}, status=status.HTTP_404_NOT_FOUND)
