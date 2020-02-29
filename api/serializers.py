@@ -58,6 +58,7 @@ class PostSerializer(serializers.ModelSerializer):
         post.title = validated_data.get('title', post.title)
         post.text = validated_data.get('text', post.text)
         post.category_id = validated_data.get('category_id', post.category_id)
+        post.is_private = validated_data.get('is_private', post.is_private)
         post.save()
         return post
 
