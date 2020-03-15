@@ -6,6 +6,7 @@ db.sqlite3
 weekendkim_backend/static/
 .idea
 .vscode
+manage.py
 
 .DS_Store
 .AppleDouble
