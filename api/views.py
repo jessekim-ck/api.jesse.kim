@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 
 from .serializers import *
 from .models import *
+from django.db.models import Q
 
 
 @api_view(['GET'])
@@ -36,10 +37,18 @@ class PostList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, format=None):
-        if request.user.is_anonymous:
-            posts = Post.objects.filter(is_private=False).order_by('-created')
-        else:
-            posts = Post.objects.all().order_by('-created')
+
+        try:
+            count = int(request.query_params.get("count"))
+            from_idx = int(request.query_params.get("from_idx"))
+        except ValueError:
+            return Response(
+                {"message": "Check the value of 'count' or 'from_idx'"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        posts = Post.objects.filter(Q(is_private=False) | Q(writer_id__id=request.user.id)).\
+            filter(id__lt=from_idx).order_by('-created')[:count]
         serializer = PostSerializer(posts, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -92,7 +101,8 @@ class CategoryList(APIView):
         category_list = Category.objects.filter(parent_category_id=None)
         category_serializer = CategorySerializer(category_list, many=True)
 
-        post_list = Post.objects.filter(category_id=None)
+        post_list = Post.objects.filter(category_id=None).\
+            filter(Q(is_private=False) | Q(writer_id__id=request.user.id))
         post_serializer = PostSerializer(post_list, many=True)
 
         return Response(
@@ -115,7 +125,8 @@ class CategoryDetail(APIView):
         children_categories = Category.objects.filter(parent_category_id=pk).order_by('id')
         children_category_serializer = CategorySerializer(children_categories, many=True)
 
-        children_posts = Post.objects.filter(category_id=pk).order_by('-created')
+        children_posts = Post.objects.filter(category_id=pk).\
+            filter(Q(is_private=False) | Q(writer_id__id=request.user.id)).order_by('-created')
         children_post_serializer = PostSerializer(children_posts, many=True)
 
         return Response(
