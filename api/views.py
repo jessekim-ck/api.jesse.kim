@@ -119,7 +119,7 @@ class CategoryList(APIView):
 class CategoryDetail(APIView):
 
     def get(self, request, pk, format=None):
-        category = Category.objects.get(pk=pk).order_by('-id')
+        category = Category.objects.get(pk=pk)
         category_serializer = CategorySerializer(category)
 
         children_categories = Category.objects.filter(parent_category_id=pk).order_by('-id')
