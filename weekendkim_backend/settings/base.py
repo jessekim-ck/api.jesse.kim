@@ -31,7 +31,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'api',
     'django_crontab',
-    'django_redis'
+    'django_redis',
+    'import_export'
 ]
 
 MIDDLEWARE = [
